@@ -45,27 +45,20 @@ int hash(char lastname[])
 int findName(char lastname[])
 {
     long key = sfold(lastname);
-    if (strcasecmp(lastname, hash_table[key].lastName)== 0) {
-        printf("%d\n", 1);
+    if (strcasecmp(lastname, hash_table[key].lastName)== 0)
         return 1;
-    } else {
+    else {
         entry *temp = hash_table[key].pNext;
 
-        if (temp == NULL) {
-            printf("%d\n", 2);
+        if (temp == NULL)
             return 0;
-        }
 
         while (strcasecmp(lastname, temp->lastName)) {
             if (temp->pNext != NULL)
                 temp = temp->pNext;
-            else {
-                printf("%d\n", 3);
+            else
                 return 0;
-            }
-
         }
-        printf("%d\n", 4);
         return 1;
     }
 }
