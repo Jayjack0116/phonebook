@@ -9,7 +9,7 @@ entry hash_table[MAX_HASH_SIZE];
 /* FILL YOUR OWN IMPLEMENTATION HERE! */
 long sfold(char lastname[])
 {
-    int length = sizeof(lastname) / 4;
+    int length = strlen(lastname) / 4;
     long sum = 0;
     for (int j = 0; j < length; j++) {
         int size = (j * 4) + 4;
@@ -35,7 +35,7 @@ long sfold(char lastname[])
 
 int hash(char lastname[])
 {
-    int len = sizeof(lastname);
+    int len = strlen(lastname);
     int i, sum=0;
     for (i=0; i < len; i++)
         sum += lastname[i];
