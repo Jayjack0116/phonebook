@@ -96,14 +96,6 @@ int main(int argc, char *argv[])
     clock_gettime(CLOCK_REALTIME, &end);
     cpu_time2 = diff_in_second(start, end);
 
-#if defined(OPT)
-    if (!findName(input)) {
-        printf("NOT FOUND!\n");
-        exit(0);
-    } else {
-        printf("FOUND!\n");
-    }
-#endif
     printf("execution time of append() : %lf sec\n", cpu_time1);
     printf("execution time of findName() : %lf sec\n", cpu_time2);
 
