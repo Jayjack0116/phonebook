@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "phonebook_opt.h"
-#define MAX_HASH_SIZE 919393 /* prime number*/
+#define MAX_HASH_SIZE 3673 /* prime number*/
 
 entry hash_table[MAX_HASH_SIZE];
 /* FILL YOUR OWN IMPLEMENTATION HERE! */
