@@ -26,3 +26,8 @@ entry *append(char lastName[], entry *e)
 
     return e;
 }
+
+void free_all(entry* pHead)
+{
+    free(pHead);
+}
