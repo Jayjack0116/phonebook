@@ -30,58 +30,66 @@ long sfold(char lastname[])
         mult *= 256;
     }
 
-    return(abs(sum) % MAX_HASH_SIZE);
+    return (abs(sum) % MAX_HASH_SIZE);
 }
 
 int hash(char lastname[])
 {
     int len = strlen(lastname);
-    int i, sum=0;
-    for (i=0; i < len; i++)
+    int i, sum = 0;
+    for (i = 0; i < len; i++)
         sum += lastname[i];
     return sum % MAX_HASH_SIZE;
 }
 
-int findName(char lastname[])
+entry *findName(char lastname[], entry *pHead)
 {
     long key = sfold(lastname);
-    if (strcasecmp(lastname, hash_table[key].lastName)== 0)
-        return 1;
-    else {
+    if (strcasecmp(lastname, hash_table[key].lastName) == 0) {
+        return &hash_table[key];
+    } else {
         entry *temp = hash_table[key].pNext;
-
-        if (temp == NULL)
-            return 0;
+        if (temp == NULL) {
+            return NULL;
+        }
 
         while (strcasecmp(lastname, temp->lastName)) {
-            if (temp->pNext != NULL)
+            if (temp->pNext != NULL) {
                 temp = temp->pNext;
-            else
-                return 0;
+            } else {
+                break;
+            }
         }
-        return 1;
+        return temp;
     }
+    return NULL;
 }
 
-void append(char lastname[])
+entry *append(char lastname[], entry *e)
 {
     long key = sfold(lastname);
-
-    if (strcasecmp(hash_table[key].lastName, "")==0) {
+    if (strcasecmp(hash_table[key].lastName, "") == 0) {
         strncpy(hash_table[key].lastName , lastname, strlen(lastname));
         hash_table[key].pNext = NULL;
     } else { /* using single link list if collision happens */
-        entry *temp = hash_table[key].pNext;
-        while (temp != NULL) {
-            temp = temp->pNext;
+        e = hash_table[key].pNext;
+        if (e == NULL) {
+            e = (entry *) malloc(sizeof(entry));
+            strncpy(e->lastName, lastname, strlen(lastname));
+            e->pNext = NULL;
+            hash_table[key].pNext = e;
         }
-        temp = (entry *) malloc(sizeof(entry));
+        while ( e->pNext != NULL)
+            e = e -> pNext;
+        entry *temp = (entry *) malloc(sizeof(entry));
         strncpy(temp->lastName, lastname, strlen(lastname));
         temp->pNext = NULL;
+        e->pNext = temp;
     }
+    return NULL;
 }
 
-void free_hash()
+void free_all(entry* pHead)
 {
     int i;
     for (i = 0; i < MAX_HASH_SIZE; i++) {
@@ -96,7 +104,6 @@ void free_hash()
                 }
                 free(temp);
             }
-
         }
     }
 }
