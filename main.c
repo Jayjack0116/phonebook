@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     char line[MAX_LAST_NAME_SIZE];
     struct timespec start, end;
     double cpu_time1, cpu_time2;
-    char input[MAX_LAST_NAME_SIZE] = "zyxel";
+
     /* check file opening */
     fp = fopen(DICT_FILE, "r");
     if (fp == NULL) {
@@ -46,67 +46,42 @@ int main(int argc, char *argv[])
 #if defined(__GNUC__)
     __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
 #endif
-
     clock_gettime(CLOCK_REALTIME, &start);
     while (fgets(line, sizeof(line), fp)) {
         while (line[i] != '\0')
             i++;
         line[i - 1] = '\0';
         i = 0;
-
-#if defined(ORIG)
         e = append(line, e);
-#endif
-
-#if defined(OPT)
-        append(line);
-#endif
     }
     clock_gettime(CLOCK_REALTIME, &end);
     cpu_time1 = diff_in_second(start, end);
 
     /* close file as soon as possible */
     fclose(fp);
-#if defined(ORIG)
+
     e = pHead;
 
     /* the givn last name to find */
-
+    char input[MAX_LAST_NAME_SIZE] = "zyxel";
+    // char input2[MAX_LAST_NAME_SIZE] = "mirrored";
     e = pHead;
-
     assert(findName(input, e) &&
            "Did you implement findName() in " IMPL "?");
     assert(0 == strcmp(findName(input, e)->lastName, "zyxel"));
-#endif
 
 #if defined(__GNUC__)
     __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
 #endif
     /* compute the execution time */
     clock_gettime(CLOCK_REALTIME, &start);
-
-#if defined(ORIG)
     findName(input, e);
-#endif
-
-#if defined(OPT)
-    findName(input);
-#endif
-
     clock_gettime(CLOCK_REALTIME, &end);
     cpu_time2 = diff_in_second(start, end);
 
-    printf("execution time of append() : %lf sec\n", cpu_time1);
-    printf("execution time of findName() : %lf sec\n", cpu_time2);
-
+    printf("execution time of append() : %.10lf sec\n", cpu_time1);
+    printf("execution time of findName() : %.10lf sec\n", cpu_time2);
     /* FIXME: release all allocated entries */
-#if defined(ORIG)
-    free(pHead);
-#endif
-
-#if defined(OPT)
-    free_hash();
-#endif
-
+    free_all(pHead);
     return 0;
 }
