@@ -3,31 +3,32 @@
 #include <string.h>
 #include <ctype.h>
 #include "phonebook_opt.h"
-#define MAX_HASH_SIZE 3673 /* prime number*/
+#define MAX_HASH_SIZE 15607 /* prime number */
 
 entry hash_table[MAX_HASH_SIZE];
 /* FILL YOUR OWN IMPLEMENTATION HERE! */
 long sfold(char lastname[])
 {
-    int length = strlen(lastname) / 4;
+    int len_name = strlen(lastname);
+    int length = len_name >> 2;
     long sum = 0;
+    long mult;
+    int size;
+    int loop;
     for (int j = 0; j < length; j++) {
-        int size = (j * 4) + 4;
-        char c[size];
-        strncpy(c, lastname + j * 4, size);
-        long mult = 1;
-        int k;
-        for (k = 0; k < strlen(c); k++) {
-            sum += c[k] * mult;
-            mult *= 256;
+        size = (j << 2);
+        loop = (size << 2) + 4 ;
+        mult = 1;
+        for (int k = size; k < loop; k++) {
+            sum += lastname[k] * mult;
+            mult = mult << 8;
         }
     }
-    char p[length * 4];
-    strncpy(p, lastname, length * 4);
-    long mult = 1;
-    for (int k = 0; k < strlen(p); k++) {
-        sum += p[k] * mult;
-        mult *= 256;
+
+    mult = 1;
+    for (int k = 0; k < len_name; k++) {
+        sum += lastname[k] * mult;
+        mult = mult << 8 ;
     }
 
     return (abs(sum) % MAX_HASH_SIZE);
@@ -56,8 +57,6 @@ entry *findName(char lastname[], entry *pHead)
         while (strcasecmp(lastname, temp->lastName)) {
             if (temp->pNext != NULL) {
                 temp = temp->pNext;
-            } else {
-                break;
             }
         }
         return temp;
